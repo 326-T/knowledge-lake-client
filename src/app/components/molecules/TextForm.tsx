@@ -9,7 +9,7 @@ export default function TextForm() {
           placeholder="メッセージを入力"
         />
         <button>
-          <LuSend className="w-12 h-12 p-2 rounded-lg bg-secondary-700 text-white" />
+          <LuSend className="form-icon p-2 rounded-lg bg-primary-400 text-white hover:bg-primary-700" />
         </button>
       </div>
     </form>

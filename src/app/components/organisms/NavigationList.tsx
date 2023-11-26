@@ -71,6 +71,7 @@ export default function NavigationList({}: {}) {
               icon={preferenceItem.icon}
               label={preferenceItem.label}
               href={preferenceItem.href}
+              selected={preferenceItem.href === pathname}
             />
           </li>
         ))}

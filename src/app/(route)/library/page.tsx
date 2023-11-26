@@ -1,10 +1,11 @@
-import UnderConstruction from "@/app/components/molecules/UnderConstruction";
 import DashBoardLayout from "@/components/template/DashBoardLayout";
+import HorizontalScrollList from "./components/molecules/HorizontalScrollList";
+import LibraryContainer from "./components/organisms/LibraryContainer";
 
 export default function TopPage() {
   return (
     <DashBoardLayout>
-      <UnderConstruction />
+      <LibraryContainer />
     </DashBoardLayout>
   );
 }

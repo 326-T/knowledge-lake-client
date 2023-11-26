@@ -6,6 +6,10 @@
   @apply w-8 h-8;
 }
 
+.form-icon {
+  @apply w-12 h-12 p-2 rounded-lg bg-primary-400 text-white hover:bg-primary-700;
+}
+
 .display-large {
   @apply font-normal;
   font-family: 'Roboto', sans-serif;
