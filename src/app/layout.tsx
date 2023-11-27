@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 // These styles apply to every route in the application
 import "./globals.css";
+import { DrawerProvider } from "./contexts/DrawerProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="jp">
-      <body>{children}</body>
+      <body>
+        <DrawerProvider>{children}</DrawerProvider>
+      </body>
     </html>
   );
 }

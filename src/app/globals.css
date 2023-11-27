@@ -10,6 +10,10 @@
   @apply w-12 h-12 p-2 rounded-lg bg-primary-400 text-white hover:bg-primary-700;
 }
 
+.wrap-words {
+  @apply whitespace-nowrap overflow-hidden overflow-ellipsis
+}
+
 .display-large {
   @apply font-normal;
   font-family: 'Roboto', sans-serif;
