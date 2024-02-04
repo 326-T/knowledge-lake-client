@@ -6,14 +6,18 @@ on:
 
 jobs:
   build-and-screenshot:
-    runs-on: ["self-hosted", "macOS", "ARM64"]
+    runs-on: ubuntu-latest
     container:
-      image: 326takeda/node_with_puppeteer:arm
-      options: --user root
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: yarn
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -22,13 +26,13 @@ jobs:
         run: yarn build
 
       - name: install puppeteer
-        run: yarn add puppeteer
+        run: PUPPETEER_PRODUCT=chrome deno run -A --unstable https://deno.land/x/puppeteer@16.2.0/install.ts
 
       - name: Start Server
         run: |
           node .next/standalone/server.js &
           sleep 10
-          node .ci/scripts/screenshot.js
+          deno run -A --unstable .ci/pipelines/screenshot.ts
 
       - name: Upload Screenshot
         uses: actions/upload-artifact@v2
