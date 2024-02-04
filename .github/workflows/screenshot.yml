@@ -37,7 +37,7 @@ jobs:
         run: |
           node .next/standalone/server.js &
           sleep 10
-          deno run -A --unstable .ci/pipelines/screenshot.js
+          deno run -A --unstable .ci/scripts/screenshot.js
 
       - name: Upload Screenshot
         uses: actions/upload-artifact@v2
