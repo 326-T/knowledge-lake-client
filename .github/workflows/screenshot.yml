@@ -8,27 +8,31 @@ jobs:
   build-and-screenshot:
     runs-on: ubuntu-latest
     container:
-      image: 326takeda/node_with_puppeteer:1.0.0
-      options: --user root
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: yarn
+      - uses: denoland/setup-deno@main
+        with:
+          deno-version: "1.28.3"
 
+      - name: Install Japanese fonts
+        run: sudo apt-get install -y fonts-noto-cjk
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-
       - name: Build
         run: yarn build
-
       - name: install puppeteer
-        run: yarn add puppeteer
+        run: PUPPETEER_PRODUCT=chrome deno run -A --unstable https://deno.land/x/puppeteer@16.2.0/install.ts
 
       - name: Start Server
         run: |
-          node .next/standalone/server.js &
+          yarn start &
           sleep 10
-          node .ci/scripts/screenshot.js
+          PUPPETEER_PRODUCT=chrome deno run -A --unstable .ci/scripts/screenshot.js
 
       - name: Upload Screenshot
         uses: actions/upload-artifact@v2
