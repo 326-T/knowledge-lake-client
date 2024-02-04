@@ -21,21 +21,20 @@ jobs:
 
       - name: Install Japanese fonts
         run: sudo apt-get install -y fonts-noto-cjk
-
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-
       - name: Build
         run: yarn build
-
       - name: install puppeteer
         run: PUPPETEER_PRODUCT=chrome deno run -A --unstable https://deno.land/x/puppeteer@16.2.0/install.ts
+      - name: Cache dependencies
+        run: deno task cache-deps
 
       - name: Start Server
         run: |
           yarn start &
           sleep 10
-          deno run -A --unstable .ci/scripts/screenshot.js
+          PUPPETEER_PRODUCT=chrome deno run -A --unstable .ci/scripts/screenshot.js
 
       - name: Upload Screenshot
         uses: actions/upload-artifact@v2
