@@ -22,7 +22,10 @@ jobs:
         run: yarn build
 
       - name: Start Server
-        run: node standalone/server.js &
+        run: node .next/standalone/server.js &
+
+      - name: install puppeteer
+        run: yarn add puppeteer
 
       - name: Take screenshot
         run: node .ci/scripts/screenshot.js
