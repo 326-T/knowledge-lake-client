@@ -83,5 +83,5 @@ jobs:
               owner,
               repo,
               issue_number,
-              body: ${{ join(steps.run-script.outputs.*, '\n') }}
+              body: ${{ steps.run-script.outputs.result }}
             });
