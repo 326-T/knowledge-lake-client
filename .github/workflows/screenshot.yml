@@ -73,7 +73,7 @@ jobs:
         with:
           github-token: ${{ secrets.PULL_REQUTST_TOKEN }}
           script: |
-            const output = `${{ steps.run-script.outputs.result }}`;
+            const output = `${{ steps.run-script.outputs.stdout }}`;
             const issue_number = context.issue.number;
             const owner = context.repo.owner;
             const repo = context.repo.repo;
