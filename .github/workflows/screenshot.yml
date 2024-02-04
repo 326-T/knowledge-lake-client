@@ -68,7 +68,7 @@ jobs:
         id: run-script
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: python .ci/scripts/ask-gpt-and-comment.py library/library_HD.png
+        run: python .ci/scripts/vision.py library/library_HD.png
 
       - name: Comment on PR
         uses: actions/github-script@v5
