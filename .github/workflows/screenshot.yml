@@ -44,5 +44,5 @@ jobs:
         with:
           name: screenshots
           path: |
-            library_HD.png
-            talk-with-ai_HD.png
+            library_HD.pdf
+            talk-with-ai_HD.pdf

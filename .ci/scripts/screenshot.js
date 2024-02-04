@@ -7,28 +7,14 @@ import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
     headless: "new",
   });
   const page = await browser.newPage();
-  await page.setRequestInterception(true);
-  page.on("request", (request) => {
-    if (
-      ["image", "stylesheet", "font", "script"].indexOf(
-        request.resourceType()
-      ) !== -1
-    ) {
-      request.abort();
-    } else {
-      request.continue();
-    }
-  });
-
-  await page.setViewport({ width: 1920, height: 1080 });
 
   // 対象のURLにアクセス
   await page.goto("http://localhost:3000/library");
-  await page.screenshot({ path: "library_HD.png" });
+  await page.pdf({ path: "library_HD.pdf", format: "A4" });
 
   // 対象のURLにアクセス
   await page.goto("http://localhost:3000/talk-with-ai");
-  await page.screenshot({ path: "talk-with-ai_HD.png" });
+  await page.pdf({ path: "talk-with-ai_HD.pdf", format: "A4" });
 
   // スマホサイズに変更
   // await page.setViewport({ width: 375, height: 667 });
