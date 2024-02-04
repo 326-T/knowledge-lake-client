@@ -7,19 +7,27 @@ import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
     headless: "new",
   });
   const page = await browser.newPage();
+  await page.setRequestInterception(true);
+  page.on("request", (request) => {
+    if (
+      ["image", "stylesheet", "font", "script"].indexOf(
+        request.resourceType()
+      ) !== -1
+    ) {
+      request.abort();
+    } else {
+      request.continue();
+    }
+  });
 
   await page.setViewport({ width: 1920, height: 1080 });
 
   // 対象のURLにアクセス
-  await page.goto("view-source:http://localhost:3000/library", {
-    waitUntil: "networkidle2",
-  });
+  await page.goto("http://localhost:3000/library");
   await page.screenshot({ path: "library_HD.png" });
 
   // 対象のURLにアクセス
-  await page.goto("view-source:http://localhost:3000/talk-with-ai", {
-    waitUntil: "networkidle2",
-  });
+  await page.goto("http://localhost:3000/talk-with-ai");
   await page.screenshot({ path: "talk-with-ai_HD.png" });
 
   // スマホサイズに変更
