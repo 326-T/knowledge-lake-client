@@ -44,6 +44,7 @@ jobs:
           path: talk-with-ai_HD.png
 
   ask-gpt-and-comment:
+    needs: build-and-screenshot
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
