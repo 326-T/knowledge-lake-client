@@ -6,9 +6,9 @@ on:
 
 jobs:
   build-and-screenshot:
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted", "macOS", "ARM64"]
     container:
-      image: 326takeda/node_with_puppeteer:1.0.0
+      image: 326takeda/node_with_puppeteer:arm
       options: --user root
 
     steps:
