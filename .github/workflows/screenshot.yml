@@ -63,20 +63,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
       - name: Run the script
-        uses: mathiasvr/command-output@v1
         id: run-script
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        with:
-          run: python .ci/scripts/vision.py library/library_HD.png
+        run: python .ci/scripts/vision.py library/library_HD.png >> $GITHUB_OUTPUT
 
       - name: Comment on PR
         uses: actions/github-script@v5
         env:
-          RESULT: ${{ steps.run-script.outputs.stdout }}
+          RESULT: ${{ join(steps.run-script.outputs.*, '\n') }}
         with:
           github-token: ${{ secrets.PULL_REQUTST_TOKEN }}
-
           script: |
             const issue_number = context.issue.number;
             const owner = context.repo.owner;
@@ -85,5 +82,5 @@ jobs:
               owner,
               repo,
               issue_number,
-              body: 
+              body: `$RESULT`,
             });
