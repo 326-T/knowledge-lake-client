@@ -35,7 +35,7 @@ jobs:
 
       - name: Start Server
         run: |
-          node .next/standalone/server.js &
+          yarn start &
           sleep 10
           deno run -A --unstable .ci/scripts/screenshot.js
 
