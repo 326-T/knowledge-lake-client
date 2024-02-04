@@ -1,0 +1,33 @@
+name: Build and Screenshot Workflow
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-screenshot:
+    runs-on: ubuntu-latest
+    container:
+      image: 326takeda/node_with_puppeteer:1.0.0
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Start Server
+        run: node standalone/server.js &
+
+      - name: Take screenshot
+        run: node .ci/scripts/screenshot.js
+
+      - name: Upload Screenshot
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: path/to/screenshots # specify your screenshot path
