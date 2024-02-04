@@ -3,7 +3,11 @@ import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
 (async () => {
   // ブラウザインスタンスを起動
   const browser = await puppeteer.launch({
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+    ],
     headless: "new",
   });
   const page = await browser.newPage();
