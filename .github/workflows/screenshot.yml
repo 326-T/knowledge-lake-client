@@ -8,8 +8,8 @@ jobs:
   build-and-screenshot:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: yarn
@@ -33,12 +33,12 @@ jobs:
           PUPPETEER_PRODUCT=chrome deno run -A --unstable .ci/scripts/screenshot.js
 
       - name: Upload Screenshot library
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: library
           path: library_HD.png
       - name: Upload Screenshot talk-with-ai
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: talk-with-ai
           path: talk-with-ai_HD.png
@@ -47,14 +47,14 @@ jobs:
     needs: build-and-screenshot
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
           name: library
           path: library/library_HD.png
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: "3.8"
           architecture: "x64"
