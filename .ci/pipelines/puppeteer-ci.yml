@@ -1,0 +1,90 @@
+__certs: &reg_certs
+  username: ((registry.username))
+  password: ((registry.password))
+  insecure: true
+
+__puppeteer: &puppeteer
+  platform: linux
+  image_resource:
+    type: registry-image
+    source:
+      repository: ((registry.username))/node_with_puppeteer:1.0.0
+      tag: 1.0.0
+      <<: *reg_certs
+
+resource_types:
+  - name: pull-request
+    type: registry-image
+    source:
+      repository: teliaoss/github-pr-resource
+
+resources:
+  - name: pull-request
+    type: pull-request
+    check_every: 24h
+    icon: merge
+    source:
+      repository: ((github.user))/((github.repository))
+      access_token: ((github.token))
+
+jobs:
+  - name: build-and-screenshot
+    plan:
+      - get: pull-request
+        trigger: true
+        version: every
+      - put: pull-request
+        params:
+          repository: pull-request
+          status: pending
+          comment: "Check UI/UX..."
+
+      - task: install-dependencies
+        config:
+          <<: *puppeteer
+          inputs:
+            - name: pull-request
+          outputs:
+            - name: node_modules
+          run:
+            path: sh
+            args:
+              - -exc
+              - |
+                cd pull-request
+                yarn install --frozen-lockfile
+                cp -r node_modules ../node_modules
+
+      - task: build
+        config:
+          <<: *puppeteer
+          inputs:
+            - name: pull-request
+            - name: node_modules
+          outputs:
+            - name: build
+          run:
+            path: sh
+            args:
+              - -exc
+              - |
+                cp -r node_modules pull-request/
+                cd pull-request
+                yarn build
+                cp -r .next ../build
+
+      - task: screenshot
+        config:
+          <<: *puppeteer
+          inputs:
+            - name: pull-request
+            - name: build
+          run:
+            path: sh
+            args:
+              - -exc
+              - |
+                cd build
+                node standalone/server.js &
+                sleep 10
+                node ../pull-request/.ci/scripts/screenshot.js
