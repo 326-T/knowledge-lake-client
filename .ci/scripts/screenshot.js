@@ -2,7 +2,10 @@ import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
 
 (async () => {
   // ブラウザインスタンスを起動
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    headless: "new",
+  });
   const page = await browser.newPage();
 
   await page.setViewport({ width: 1920, height: 1080 });
