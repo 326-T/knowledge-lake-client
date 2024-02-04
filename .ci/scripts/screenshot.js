@@ -4,7 +4,7 @@ const puppeteer = require("puppeteer");
   // ブラウザインスタンスを起動
   const browser = await puppeteer.launch({
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    headless: "new", // または "new" に変更してみてください
+    headless: true,
   });
   const page = await browser.newPage();
 
