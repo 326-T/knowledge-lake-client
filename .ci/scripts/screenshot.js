@@ -18,7 +18,9 @@ import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
   await page.setViewport({ width: 1920, height: 1080 });
 
   // 対象のURLにアクセス
-  await page.goto("http://localhost:3000/library", { waitUntil: ["load"] });
+  await page.goto("http://localhost:3000/library", {
+    waitUntil: "networkidle0",
+  });
   await page.screenshot({ path: "library_HD.png" });
 
   // 対象のURLにアクセス
