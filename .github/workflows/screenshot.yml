@@ -38,7 +38,7 @@ jobs:
           name: library
           path: library_HD.png
       - name: Upload Screenshot talk-with-ai
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: talk-with-ai
           path: talk-with-ai_HD.png
