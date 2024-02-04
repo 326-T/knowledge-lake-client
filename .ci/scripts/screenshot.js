@@ -11,13 +11,13 @@ const puppeteer = require("puppeteer");
   await page.setViewport({ width: 1920, height: 1080 });
 
   // 対象のURLにアクセス
-  await page.goto(`http://host.docker.internal:3001/library`, {
+  await page.goto(`http://${process.env.HOSTNAME}:3000/library`, {
     waitUntil: "networkidle0",
   });
   await page.screenshot({ path: "library_HD.png" });
 
   // 対象のURLにアクセス
-  await page.goto(`http://host.docker.internal:3001/talk-with-ai`, {
+  await page.goto(`http://${process.env.HOSTNAME}:3000/talk-with-ai`, {
     waitUntil: "networkidle0",
   });
   await page.screenshot({ path: "talk-with-ai_HD.png" });
