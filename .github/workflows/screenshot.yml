@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: 326takeda/node_with_puppeteer:1.0.0
+      options: --user root
 
     steps:
       - name: Checkout code
