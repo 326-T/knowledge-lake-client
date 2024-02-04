@@ -13,6 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set up Deno
+        uses: denoland/setup-deno@main
+        with:
+          deno-version: "1.28.3"
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
