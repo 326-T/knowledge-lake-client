@@ -79,9 +79,10 @@ jobs:
             const issue_number = context.issue.number;
             const owner = context.repo.owner;
             const repo = context.repo.repo;
+            const comment = `${{ steps.run-script.outputs.result }}`
             await github.rest.issues.createComment({
               owner,
               repo,
               issue_number,
-              body: "```${{ steps.run-script.outputs.result }}```"
+              body: comment
             });
