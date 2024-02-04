@@ -21,17 +21,19 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Start Server
-        run: node .next/standalone/server.js &
-
       - name: install puppeteer
         run: yarn add puppeteer
 
-      - name: Take screenshot
-        run: node .ci/scripts/screenshot.js
+      - name: Start Server
+        run: |
+          node .next/standalone/server.js &
+          sleep 10
+          node .ci/scripts/screenshot.js
 
       - name: Upload Screenshot
         uses: actions/upload-artifact@v2
         with:
           name: screenshots
-          path: path/to/screenshots # specify your screenshot path
+          path: |
+            library_HD.png
+            talk-with-ai_HD.png
