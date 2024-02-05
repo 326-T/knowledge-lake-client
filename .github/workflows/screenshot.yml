@@ -7,11 +7,9 @@ on:
 jobs:
   build-and-screenshot:
     runs-on: ubuntu-latest
-    container:
-
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: yarn
@@ -34,10 +32,57 @@ jobs:
           sleep 10
           PUPPETEER_PRODUCT=chrome deno run -A --unstable .ci/scripts/screenshot.js
 
-      - name: Upload Screenshot
-        uses: actions/upload-artifact@v2
+      - name: Upload Screenshot library
+        uses: actions/upload-artifact@v4
         with:
-          name: screenshots
-          path: |
-            library_HD.png
-            talk-with-ai_HD.png
+          name: library
+          path: library_HD.png
+      - name: Upload Screenshot talk-with-ai
+        uses: actions/upload-artifact@v4
+        with:
+          name: talk-with-ai
+          path: talk-with-ai_HD.png
+
+  ask-gpt-and-comment:
+    needs: build-and-screenshot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: library
+          path: library
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
+          architecture: "x64"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+      - name: Run the script
+        id: run-script
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          echo "result<<EOF" >> $GITHUB_OUTPUT
+          echo "$(python .ci/scripts/vision.py library/library_HD.png)" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Comment on PR
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.PULL_REQUTST_TOKEN }}
+          script: |
+            const issue_number = context.issue.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const comment = `${{ steps.run-script.outputs.result }}`
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body: comment
+            });
