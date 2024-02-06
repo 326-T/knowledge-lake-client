@@ -91,9 +91,17 @@ personas = [
   - レビュー視点: ウェブサイトのアクセシビリティ、情報の簡潔性、高齢者向けのコンテンツ
 ''']
 
+icons = [
+  "<img src=\"https://github.com/326-T/knowledge-lake-client/assets/32381339/2fd20432-bfaf-47b1-8854-67ebb6a7c3a3\" width=\"30%\" height=\"auto\">",
+  "<img src=\"https://github.com/326-T/knowledge-lake-client/assets/32381339/1572cd66-047e-4a61-be34-1a9a69fa2d49\" width=\"30%\" height=\"auto\">",
+  "<img src=\"https://github.com/326-T/knowledge-lake-client/assets/32381339/8902eb7c-6f7b-4e50-9bb5-f75364049f3a\" width=\"30%\" height=\"auto\">",
+  "<img src=\"https://github.com/326-T/knowledge-lake-client/assets/32381339/2eaf32ca-8472-47bf-a336-d3befda76c5e\" width=\"30%\" height=\"auto\">",
+]
+
 def main():
-  for persona in personas:
+  for (persona, index) in personas:
     res = ask_gpt_vision(persona, base64_image, api_key)
+    print(icons[index])
     print(persona)
     print(res)
 
