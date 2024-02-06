@@ -59,33 +59,49 @@ base64_image = encode_image(image_path)
 
 personas = [
 '''
-1. **ペルソナB - 中年のビジネスマン**
-   - 名前: 誠 (Makoto)
-   - 年齢: 45歳
-   - 職業: 企業経営者
-   - 興味: ビジネス、マーケティング、効率性
-   - レビュー視点: ウェブサイトのプロフェッショナリズム、コンテンツの質、ユーザーエンゲージメント
+1. **中年のビジネスマン**
+  - 名前: 誠 (Makoto)
+  - 年齢: 45歳
+  - 職業: 企業経営者
+  - 興味: ビジネス、マーケティング、効率性
+  - レビュー視点: ウェブサイトのプロフェッショナリズム、コンテンツの質、ユーザーエンゲージメント
 ''',
 '''
-2. **ペルソナC - 主婦**
-   - 名前: 美智子 (Michiko)
-   - 年齢: 38歳
-   - 職業: 主婦
-   - 興味: 家族、健康、オンラインショッピング
-   - レビュー視点: ウェブサイトの使いやすさ、情報の信頼性、家族向けコンテンツ
+2. **主婦**
+  - 名前: 美智子 (Michiko)
+  - 年齢: 38歳
+  - 職業: 主婦
+  - 興味: 家族、健康、オンラインショッピング
+  - レビュー視点: ウェブサイトの使いやすさ、情報の信頼性、家族向けコンテンツ
 ''',
 '''
-3. **ペルソナE - シニア**
-   - 名前: 明 (Akira)
-   - 年齢: 65歳
-   - 職業: 退職
-   - 興味: 健康、旅行、ニュース
-   - レビュー視点: ウェブサイトのアクセシビリティ、情報の簡潔性、高齢者向けのコンテンツ
+3. **高校生**
+  - 名前: 理沙 (Risa)
+  - 年齢: 17歳
+  - 職業: 学生
+  - 興味: ソーシャルメディア、エンターテインメント、トレンド
+レビュー視点: ウェブサイトのトレンド感、エンターテインメントの質、ソーシャルメディア統合
+''',
+'''
+4. **シニア**
+  - 名前: 明 (Akira)
+  - 年齢: 65歳
+  - 職業: 退職
+  - 興味: 健康、旅行、ニュース
+  - レビュー視点: ウェブサイトのアクセシビリティ、情報の簡潔性、高齢者向けのコンテンツ
 ''']
 
+icons = [
+  "<img src=\"https://github.com/326-T/knowledge-lake-client/assets/32381339/2fd20432-bfaf-47b1-8854-67ebb6a7c3a3\" width=\"30%\" height=\"auto\">",
+  "<img src=\"https://github.com/326-T/knowledge-lake-client/assets/32381339/1572cd66-047e-4a61-be34-1a9a69fa2d49\" width=\"30%\" height=\"auto\">",
+  "<img src=\"https://github.com/326-T/knowledge-lake-client/assets/32381339/8902eb7c-6f7b-4e50-9bb5-f75364049f3a\" width=\"30%\" height=\"auto\">",
+  "<img src=\"https://github.com/326-T/knowledge-lake-client/assets/32381339/2eaf32ca-8472-47bf-a336-d3befda76c5e\" width=\"30%\" height=\"auto\">",
+]
+
 def main():
-  for persona in personas:
+  for index, persona in enumerate(personas):
     res = ask_gpt_vision(persona, base64_image, api_key)
+    print(icons[index])
     print(persona)
     print(res)
 
