@@ -99,7 +99,7 @@ icons = [
 ]
 
 def main():
-  for (persona, index) in personas:
+  for persona, index in enumerate(personas):
     res = ask_gpt_vision(persona, base64_image, api_key)
     print(icons[index])
     print(persona)
