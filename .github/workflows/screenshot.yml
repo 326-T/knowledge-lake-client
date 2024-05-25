@@ -33,15 +33,11 @@ jobs:
           PUPPETEER_PRODUCT=chrome deno run -A --unstable .ci/scripts/screenshot.js
 
       - name: Upload Screenshot library
+        id: upload-screenshot
         uses: actions/upload-artifact@v4
         with:
           name: library
           path: library_HD.png
-      - name: Upload Screenshot talk-with-ai
-        uses: actions/upload-artifact@v4
-        with:
-          name: talk-with-ai
-          path: talk-with-ai_HD.png
 
       - name: Comment on PR
         uses: actions/github-script@v6
@@ -52,8 +48,7 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const comment = `
-              <img src="https://github.com/326-T/knowledge-lake-client/assets/32381339/fc8e1065-2b03-48e4-986d-87beb9cc354f" width="50%" height="auto">
-              <img src="https://github.com/326-T/knowledge-lake-client/assets/32381339/da3554e0-0dec-453a-9296-7f503466ad4a" width="50%" height="auto">
+              <img src="${{ steps.upload-screenshot.outputs.artifact-url }}" width="100%" height="auto">
             `
             await github.rest.issues.createComment({
               owner,
