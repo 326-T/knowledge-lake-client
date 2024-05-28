@@ -30,17 +30,16 @@ jobs:
         run: |
           yarn start &
           sleep 10
-          PUPPETEER_PRODUCT=chrome deno run -A --unstable .ci/scripts/screenshot.js
+          PUPPETEER_PRODUCT=chrome deno run -A --unstable .ci/scripts/screenshot.js before
 
       - name: Upload Screenshot library
         id: upload-screenshot
         uses: actions/upload-artifact@v4
         with:
-          name: library
-          path: library_HD.png
+          name: before
+          path: before_library_HD.png
 
-      - &comment-on-pr
-        name: Comment on PR
+      - name: Comment on PR
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.PULL_REQUTST_TOKEN }}
@@ -48,14 +47,15 @@ jobs:
             const issue_number = context.issue.number;
             const owner = context.repo.owner;
             const repo = context.repo.repo;
+            const comment = `
+              <img src="${{ steps.upload-screenshot.outputs.artifact-url }}" width="100%" height="auto">
+            `
             await github.rest.issues.createComment({
               owner,
               repo,
               issue_number,
-              body: ${process.env.COMMENT}
+              body: comment
             });
-        env:
-          COMMENT: <img src="${{ steps.upload-screenshot.outputs.artifact-url }}" width="100%" height="auto">
 
   ask-gpt-and-comment:
     needs: build-and-screenshot
@@ -64,8 +64,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: library
-          path: library
+          name: before
+          path: before
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -82,9 +82,21 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           echo "result<<EOF" >> $GITHUB_OUTPUT
-          echo "$(python .ci/scripts/vision.py library/library_HD.png)" >> $GITHUB_OUTPUT
+          echo "$(python .ci/scripts/vision.py before/before_library_HD.png)" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: *comment-on-pr
-        env:
-          COMMENT: ${{ steps.run-script.outputs.result }}
+      - name: Comment on PR
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.PULL_REQUTST_TOKEN }}
+          script: |
+            const issue_number = context.issue.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const comment = `${{ steps.run-script.outputs.result }}`
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body: comment
+            });
