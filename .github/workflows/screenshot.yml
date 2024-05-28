@@ -142,7 +142,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           echo "result<<EOF" >> $GITHUB_OUTPUT
-          echo "$(python .ci/scripts/vision.py before/library_HD.png)" >> $GITHUB_OUTPUT
+          echo "$(python .ci/scripts/vision.py before/library_HD.png after/library_HD.png)" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
