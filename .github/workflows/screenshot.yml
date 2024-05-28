@@ -85,6 +85,6 @@ jobs:
           echo "$(python .ci/scripts/vision.py library/library_HD.png)" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: *&comment-on-pr
+      - name: *comment-on-pr
         env:
           COMMENT: ${{ steps.run-script.outputs.result }}
