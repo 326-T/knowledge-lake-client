@@ -51,7 +51,7 @@ jobs:
             const repo = context.repo.repo;
             const comment = `
               ## 変更前
-              <img src="${{ steps.upload-screenshot.outputs.artifact-url }}" width="100%" height="auto">
+              <img src="https://github.com/326-T/knowledge-lake-client/assets/32381339/3a704c86-6fdf-4e62-aaff-ceacfb3fcee0" width="100%" height="auto">
             `
             await github.rest.issues.createComment({
               owner,
@@ -104,7 +104,7 @@ jobs:
             const repo = context.repo.repo;
             const comment = `
               ## 変更後
-              <img src="${{ steps.upload-screenshot.outputs.artifact-url }}" width="100%" height="auto">
+              <img src="https://github.com/326-T/knowledge-lake-client/assets/32381339/6b85b737-9b8f-43d2-8f20-c79a7675005f" width="100%" height="auto">
             `
             await github.rest.issues.createComment({
               owner,
