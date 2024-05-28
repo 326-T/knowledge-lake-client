@@ -1,8 +1,8 @@
 import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
 
+const args = process.argv.slice(2); // Get command-line arguments excluding "node" and "screenshot.js"
+const pathToSave = args[0]; // Get the first argument as the path to save the screenshot
 (async () => {
-  const args = process.argv.slice(2); // Get command-line arguments excluding "node" and "screenshot.js"
-  const pathToSave = args[0]; // Get the first argument as the path to save the screenshot
   // ブラウザインスタンスを起動
   const browser = await puppeteer.launch({
     args: [
