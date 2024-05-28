@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  build-and-screenshot:
+  screenshot-before:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,14 +30,14 @@ jobs:
         run: |
           yarn start &
           sleep 10
-          PUPPETEER_PRODUCT=chrome deno run -A --unstable .ci/scripts/screenshot.js before
+          PUPPETEER_PRODUCT=chrome deno run -A --unstable .ci/scripts/screenshot.js
 
       - name: Upload Screenshot library
         id: upload-screenshot
         uses: actions/upload-artifact@v4
         with:
           name: before
-          path: before_library_HD.png
+          path: library_HD.png
 
       - name: Comment on PR
         uses: actions/github-script@v7
@@ -48,6 +48,60 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const comment = `
+              ## 変更前
+              <img src="${{ steps.upload-screenshot.outputs.artifact-url }}" width="100%" height="auto">
+            `
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body: comment
+            });
+
+  screenshot-after:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+      - uses: denoland/setup-deno@main
+        with:
+          deno-version: "1.28.3"
+
+      - name: Install Japanese fonts
+        run: sudo apt-get install -y fonts-noto-cjk
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build
+        run: yarn build
+      - name: install puppeteer
+        run: PUPPETEER_PRODUCT=chrome deno run -A --unstable https://deno.land/x/puppeteer@16.2.0/install.ts
+
+      - name: Start Server
+        run: |
+          yarn start &
+          sleep 10
+          PUPPETEER_PRODUCT=chrome deno run -A --unstable .ci/scripts/screenshot.js
+
+      - name: Upload Screenshot library
+        id: upload-screenshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: before
+          path: library_HD.png
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PULL_REQUTST_TOKEN }}
+          script: |
+            const issue_number = context.issue.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const comment = `
+              ## 変更後
               <img src="${{ steps.upload-screenshot.outputs.artifact-url }}" width="100%" height="auto">
             `
             await github.rest.issues.createComment({
@@ -58,7 +112,7 @@ jobs:
             });
 
   ask-gpt-and-comment:
-    needs: build-and-screenshot
+    needs: [screenshot-before, screenshot-after]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -66,6 +120,10 @@ jobs:
         with:
           name: before
           path: before
+      - uses: actions/download-artifact@v4
+        with:
+          name: after
+          path: after
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -82,7 +140,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           echo "result<<EOF" >> $GITHUB_OUTPUT
-          echo "$(python .ci/scripts/vision.py before/before_library_HD.png)" >> $GITHUB_OUTPUT
+          echo "$(python .ci/scripts/vision.py before/library_HD.png)" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
